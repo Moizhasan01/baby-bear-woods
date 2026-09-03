@@ -41,9 +41,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       if (raw) {
         const parsed = JSON.parse(raw) as { id: string; qty: number }[];
         setItems(
-          parsed
-            .filter((p) => PRODUCTS[p.id])
-            .map((p) => ({ product: PRODUCTS[p.id], qty: p.qty })),
+          parsed.flatMap((p) => {
+            const product = PRODUCTS[p.id];
+            return product ? [{ product, qty: p.qty }] : [];
+          }),
         );
       }
     } catch {
